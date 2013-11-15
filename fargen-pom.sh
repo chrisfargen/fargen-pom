@@ -10,7 +10,7 @@ if [ -z "$1" ]
 then
     echo "** No command given."
     exit 1
-elif [ "$1" = "new" ]
+elif [ "$1" = "start" ]
 then
     clear
     echo "** Starting..."
@@ -18,26 +18,44 @@ then
     echo "** What is your goal?"
     read goal
 
-    start_unix=$(date)
+    start_unix=$(date -d "+ 1 minute")
     start_str=$(date +%F\ %R -d "$start_unix")
     end_str=$(date +%F\ %R -d "$start_unix + $pomodoro_timer minutes")
     echo -e "** START:\t$start_str"
     echo -e "** END:  \t$end_str"
 
+    # SOUND
     #http://www.unix.com/showpost.php?s=9bc2b8e5a791d32d259d221a61811f14&p=302358739&postcount=6
-    (for (( i=60*$pomodoro_timer; i>0; i--)); do
-        sleep 1 &
-        printf "** REMAINING:\t$i \r"
-        play -qn synth 0.01 noise A vol 0.002 &
+    (for (( i=$pomodoro_timer; i>0; i--)); do
+        sleep 1m &
+        #printf "** REMAINING:\t$i \r"
+        #play -qn synth 0.02 noise A vol 0.005 &
+        #play -q /var/www/fargen-pom/tic-toc.wav
         wait
     done) 
     
-    echo "** TIME IS UP!"
+    #echo "** TIME IS UP!"
     play -q /var/www/fargen-pom/bell.wav
 
-    echo "** What did you accomplish?"
-    read accomplishment
+    #echo "** What did you accomplish?"
+    #read accomplishment
 
+    INIT=""
+    accomplishment=$(whiptail --inputbox "What did you accomplish?" 8 78 $INIT --title "Take a break!" 3>&1 1>&2 2>&3)
+     
+    exitstatus=$?
+    
+    if [ $exitstatus = 0 ]
+    then
+        echo -e "** DONE:\t$accomplishment"
+    else
+        echo "** POMODORO CANCELED!"
+    fi
+     
+    echo -e "** EXIT:\n$exitstatus"
+    
+    exit 0
+    
     echo "** Adding entry to sqlite..."
     # Quick and dirty insert.
     sqlite3 fargenpom <<-EOM
