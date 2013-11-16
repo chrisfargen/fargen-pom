@@ -28,17 +28,13 @@ then
     #http://www.unix.com/showpost.php?s=9bc2b8e5a791d32d259d221a61811f14&p=302358739&postcount=6
     (for (( i=$pomodoro_timer; i>0; i--)); do
         sleep 1m &
-        #printf "** REMAINING:\t$i \r"
-        #play -qn synth 0.02 noise A vol 0.005 &
-        #play -q /var/www/fargen-pom/tic-toc.wav
+        printf "** TO GO:\t$i min \r"
+        #play -qn synth 0.01 noise A vol 0.01 &
         wait
     done) 
     
     #echo "** TIME IS UP!"
-    play -q /var/www/fargen-pom/bell.wav
-
-    #echo "** What did you accomplish?"
-    #read accomplishment
+    play -q /var/www/fargen-pom/bell.wav vol 0.25
 
     INIT=""
     accomplishment=$(whiptail --inputbox "What did you accomplish?" 8 78 $INIT --title "Take a break!" 3>&1 1>&2 2>&3)
