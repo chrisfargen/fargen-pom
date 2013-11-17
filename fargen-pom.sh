@@ -16,7 +16,7 @@ then
     echo "** Starting..."
     echo "** You have $pomodoro_timer minutes." 
     echo "** What is your goal?"
-    read goal
+    read -p "** " goal
 
     start_unix=$(date -d "+ 1 minute")
     start_str=$(date +%F\ %R -d "$start_unix")
@@ -48,10 +48,6 @@ then
         echo "** POMODORO CANCELED!"
     fi
      
-    echo -e "** EXIT:\n$exitstatus"
-    
-    exit 0
-    
     echo "** Adding entry to sqlite..."
     # Quick and dirty insert.
     sqlite3 fargenpom <<-EOM
