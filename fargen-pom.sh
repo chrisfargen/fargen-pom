@@ -4,6 +4,9 @@
 pomodoro_timer=25
 break_timer=5
 set_timer=30
+db="$HOME/.config/fargenpom/db"
+
+mkdir -p ~/.config/fargenpom
 
 if [ -z "$1" ]
 then
@@ -49,7 +52,7 @@ then
      
     echo "** Adding entry to sqlite..."
     # Quick and dirty insert.
-    sqlite3 fargenpomdb <<-EOM
+    sqlite3 $db <<-EOM
 CREATE TABLE IF NOT EXISTS pomodoro(start datetime, end datetime, goal text, accomplishment text, submitted datetime default current_timestamp);
 INSERT INTO pomodoro (start, end, goal, accomplishment) VALUES('$start_str','$end_str','$goal','$accomplishment');
 EOM
@@ -58,7 +61,7 @@ EOM
 
 elif [ "$1" = "ls" ]
 then
-    sqlite3 fargenpomdb <<-EOM
+    sqlite3 $db <<-EOM
 .mode column
 .headers on
 SELECT * FROM pomodoro;
