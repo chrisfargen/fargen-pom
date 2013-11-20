@@ -34,7 +34,7 @@ then
         wait
     done) 
     
-    #echo "** Time is up!"
+    echo "** Time is up!"
     play -q /var/www/fargen-pom/bell.wav vol 0.25
 
     INIT=""
@@ -59,6 +59,23 @@ EOM
 
     echo "** Hurray!"
 
+    echo "** Would you like to start a break timer?"
+
+    read set_break_timer
+
+    if [ "$set_break_timer" = "y" ]
+    then
+        (for (( i=$break_timer; i>0; i--)); do
+            sleep 1m &
+            printf "** R: $i minutes\r"
+            wait
+        done)
+
+    play -q /var/www/fargen-pom/bell.wav vol 0.25
+ 
+    echo "** Break up!"
+
+    fi
 elif [ "$1" = "ls" ]
 then
     sqlite3 $db <<-EOM
