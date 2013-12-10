@@ -31,7 +31,7 @@ then
     echo -n "** R: "
     (for (( i=$pomodoro_timer; i>0; i--)); do
         sleep 1m &
-	if [ $[ $i % 5 ] -eq 0 ] || [ $[ $i < 20 ] ]
+	if [ $[ $i % 5 ] -eq 0 ] || [ "$i" -lt "5" ]
 	then
 	    echo -n "$i..."
 	fi
