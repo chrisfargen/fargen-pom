@@ -27,18 +27,23 @@ then
 
     # SOUND
     #http://www.unix.com/showpost.php?s=9bc2b8e5a791d32d259d221a61811f14&p=302358739&postcount=6
+    
+    echo -n "** R: "
     (for (( i=$pomodoro_timer; i>0; i--)); do
         sleep 1m &
-        printf "** R: $i minutes\r"
+	if [ $[ $i % 5 ] -eq 0 ] || [ $[ $i < 20 ] ]
+	then
+	    echo -n "$i..."
+	fi
         #play -qn synth 0.01 noise A vol 0.01 &
         wait
     done) 
     
-    echo "** Time is up!"
+    echo -e "** Time is up!\t\t"
     play -q /var/www/fargen-pom/bell.wav vol 0.25
 
     INIT=""
-    accomplishment=$(whiptail --inputbox "What did you accomplish?" 8 78 $INIT --title "Take a break!" 3>&1 1>&2 2>&3)
+    accomplishment=$(whiptail --inputbox "Summary:" 8 78 $INIT --title "FARGEN POMODORO - Take a break!" 3>&1 1>&2 2>&3)
      
     exitstatus=$?
     
@@ -73,9 +78,10 @@ EOM
 
     play -q /var/www/fargen-pom/bell.wav vol 0.25
  
-    echo "** Break up!"
+    echo -e "** Break time is up!\t\t"
 
     fi
+
 elif [ "$1" = "ls" ]
 then
     sqlite3 $db <<-EOM
